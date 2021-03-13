@@ -16,8 +16,8 @@ import {CreateJobComponent } from './create-job/create-job.component';
 import {EditJobComponent  } from './edit-job/edit-job.component';
 
 
-class PagedUsersRequestDto extends PagedRequestDto {
-  keyword: string;
+class PagedJobsRequestDto extends PagedRequestDto {
+  companyName: string;
   isActive: boolean | null;
 }
 
@@ -28,7 +28,7 @@ class PagedUsersRequestDto extends PagedRequestDto {
 })
 export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   jobs: JobListDTO[] = [];
-  keyword = '';
+  companyName = '';
   isActive: boolean | null;
   advancedFiltersVisible = false;
 
@@ -69,20 +69,32 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   }
 
   clearFilters(): void {
-    this.keyword = '';
+    this.companyName = '';
     this.isActive = undefined;
     this.getDataPage(1);
   }
 
   protected list(
-    request: PagedUsersRequestDto,
+    request: PagedJobsRequestDto,
     pageNumber: number,
     finishedCallback: Function
   ): void {
-    request.keyword = this.keyword;
+    request.companyName = this.companyName;
     request.isActive = this.isActive;
 
-    this._jobService
+  
+    this._jobService.getAll(request.companyName)
+    .pipe(
+     finalize(() => {
+      // console.log("Error")
+        finishedCallback();
+     })
+    )
+     .subscribe( data => { 
+      console.log(data)
+      this.jobs=data.items;
+ 
+    });
       // .getAll(
       //   request.keyword,
       //   request.isActive,
