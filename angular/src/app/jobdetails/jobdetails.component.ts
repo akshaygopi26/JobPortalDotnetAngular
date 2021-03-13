@@ -10,7 +10,8 @@ import {
   JobListDTO,
   JobServiceProxy,
   UpdateJobInputDTO,
-  JobListDTOListResultDto
+  JobListDTOListResultDto,
+  JobListDTOPagedResultDto
 } from '@shared/service-proxies/service-proxies';
 import {CreateJobComponent } from './create-job/create-job.component';
 import {EditJobComponent  } from './edit-job/edit-job.component';
@@ -41,11 +42,11 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   }
 
   ngOnInit(): void {
-    this.getAllJobs("");
+    this.getAllJobs("",0,10);
   }
 
-  getAllJobs(companyName: string){
-    this._jobService.getAll(companyName)
+  getAllJobs(companyName: string,skipCount: number,maxResultCount: number){
+    this._jobService.getJobCounts(companyName,skipCount,maxResultCount)
     .pipe(
      finalize(() => {
        console.log("Error")
@@ -55,7 +56,7 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
      .subscribe( data => { 
       console.log(data)
       this.jobs=data.items;
- 
+      this.totalItems=data.totalCount;
     });
    }
 
@@ -83,33 +84,35 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
     request.isActive = this.isActive;
 
   
-    this._jobService.getAll(request.companyName)
-    .pipe(
-     finalize(() => {
-      // console.log("Error")
-        finishedCallback();
-     })
-    )
-     .subscribe( data => { 
-      console.log(data)
-      this.jobs=data.items;
+    // this._jobService.getAll(request.companyName)
+    // .pipe(
+    //  finalize(() => {
+    //   // console.log("Error")
+    //     finishedCallback();
+    //  })
+    // )
+    //  .subscribe( data => { 
+    //   console.log(data)
+    //   this.jobs=data.items;
  
-    });
-      // .getAll(
-      //   request.keyword,
-      //   request.isActive,
-      //   request.skipCount,
-      //   request.maxResultCount
-      // )
-      // .pipe(
-      //   finalize(() => {
-      //     finishedCallback();
-      //   })
-      // )
-      // .subscribe((result: UserDtoPagedResultDto) => {
-      //   this.users = result.items;
-      //   this.showPaging(result, pageNumber);
-      // });
+    // });
+
+      this._jobService
+      .getJobCounts(
+        request.companyName,
+        //request.isActive,
+        request.skipCount,
+        request.maxResultCount
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        })
+      )
+      .subscribe((result: JobListDTOPagedResultDto) => {
+        this.jobs = result.items;
+        this.showPaging(result, pageNumber);
+      });
   }
 
   protected delete(job: JobListDTO): void {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using System.Linq;
 
 namespace JobPortal.Jobs
 {
@@ -49,5 +50,26 @@ namespace JobPortal.Jobs
         {
             await _jobRepository.DeleteAsync(input.Id);
         }
+
+        public PagedResultDto<JobListDTO> GetJobCounts(GetAllJobsInput input)
+        {
+            var jobrepo = _jobRepository
+            .GetAll()
+            .WhereIf(
+                !input.CompanyName.IsNullOrEmpty(),
+                p => p.CompanyName.Contains(input.CompanyName)
+            );
+
+            var pagedResult = jobrepo.OrderBy(p => p.CompanyName)
+             .Skip(input.SkipCount)
+             .Take(input.MaxResultCount)
+
+             .ToList();
+            var totalcount = jobrepo.Count();
+            var jobmapped = ObjectMapper.Map<List<JobListDTO>>(pagedResult);
+            return new PagedResultDto<JobListDTO>(totalcount, jobmapped);
+        }
+
+
     }
 }
