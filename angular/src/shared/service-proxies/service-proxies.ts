@@ -529,14 +529,17 @@ export class JobServiceProxy {
 
     /**
      * @param companyName (optional) 
+     * @param excludeJobsId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(companyName: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<JobListDTOListResultDto> {
+    getAll(companyName: string | null | undefined, excludeJobsId: number[] | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<JobListDTOListResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Job/GetAll?";
         if (companyName !== undefined)
             url_ += "CompanyName=" + encodeURIComponent("" + companyName) + "&";
+        if (excludeJobsId !== undefined)
+            excludeJobsId && excludeJobsId.forEach(item => { url_ += "ExcludeJobsId=" + encodeURIComponent("" + item) + "&"; });
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -749,14 +752,17 @@ export class JobServiceProxy {
 
     /**
      * @param companyName (optional) 
+     * @param excludeJobsId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getJobCounts(companyName: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<JobListDTOPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/Job/GetJobCounts?";
+    getAllPaginatedJobs(companyName: string | null | undefined, excludeJobsId: number[] | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<JobListDTOPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Job/GetAllPaginatedJobs?";
         if (companyName !== undefined)
             url_ += "CompanyName=" + encodeURIComponent("" + companyName) + "&";
+        if (excludeJobsId !== undefined)
+            excludeJobsId && excludeJobsId.forEach(item => { url_ += "ExcludeJobsId=" + encodeURIComponent("" + item) + "&"; });
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -776,11 +782,11 @@ export class JobServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetJobCounts(response_);
+            return this.processGetAllPaginatedJobs(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetJobCounts(<any>response_);
+                    return this.processGetAllPaginatedJobs(<any>response_);
                 } catch (e) {
                     return <Observable<JobListDTOPagedResultDto>><any>_observableThrow(e);
                 }
@@ -789,7 +795,74 @@ export class JobServiceProxy {
         }));
     }
 
-    protected processGetJobCounts(response: HttpResponseBase): Observable<JobListDTOPagedResultDto> {
+    protected processGetAllPaginatedJobs(response: HttpResponseBase): Observable<JobListDTOPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = JobListDTOPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<JobListDTOPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param companyName (optional) 
+     * @param excludeJobsId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getNotAppliedJobs(companyName: string | null | undefined, excludeJobsId: number[] | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<JobListDTOPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Job/GetNotAppliedJobs?";
+        if (companyName !== undefined)
+            url_ += "CompanyName=" + encodeURIComponent("" + companyName) + "&";
+        if (excludeJobsId !== undefined)
+            excludeJobsId && excludeJobsId.forEach(item => { url_ += "ExcludeJobsId=" + encodeURIComponent("" + item) + "&"; });
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNotAppliedJobs(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNotAppliedJobs(<any>response_);
+                } catch (e) {
+                    return <Observable<JobListDTOPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<JobListDTOPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetNotAppliedJobs(response: HttpResponseBase): Observable<JobListDTOPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

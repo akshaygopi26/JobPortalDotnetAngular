@@ -50,7 +50,7 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   }
 
   getAllJobs(companyName: string,skipCount: number,maxResultCount: number){
-    this._jobService.getJobCounts(companyName,skipCount,maxResultCount)
+    this._jobService.getNotAppliedJobs(companyName,null,skipCount,maxResultCount)
     .pipe(
      finalize(() => {
        console.log("Error")
@@ -107,8 +107,9 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
     // });
 
       this._jobService
-      .getJobCounts(
+      .getNotAppliedJobs(
         request.companyName,
+        null,
         //request.isActive,
         request.skipCount,
         request.maxResultCount

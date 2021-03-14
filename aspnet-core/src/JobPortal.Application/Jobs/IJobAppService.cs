@@ -18,7 +18,9 @@ namespace JobPortal.Jobs
 
         Task DeleteJob(DeleteJobInput input);
 
-        PagedResultDto<JobListDTO> GetJobCounts(GetAllJobsInput input);
+        PagedResultDto<JobListDTO> GetAllPaginatedJobs(GetAllJobsInput input);
+
+        PagedResultDto<JobListDTO> GetNotAppliedJobs(GetAllJobsInput input);
 
     }
 }

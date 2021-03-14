@@ -9,6 +9,7 @@ using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Linq;
+using JobPortal.ApplicantJobs;
 
 namespace JobPortal.Jobs
 {
@@ -17,9 +18,13 @@ namespace JobPortal.Jobs
 
         private readonly IRepository<JobDetails> _jobRepository;
 
-        public JobAppService(IRepository<JobDetails> jobRepository)
+        private readonly IRepository<AppliedJobs> _appliedJobsRepository;
+
+
+        public JobAppService(IRepository<JobDetails> jobRepository, IRepository<AppliedJobs> appliedJobsRepository)
         {
             _jobRepository = jobRepository;
+            _appliedJobsRepository = appliedJobsRepository;
         }
 
         public async Task<ListResultDto<JobListDTO>> GetAll(GetAllJobsInput input)
@@ -51,24 +56,43 @@ namespace JobPortal.Jobs
             await _jobRepository.DeleteAsync(input.Id);
         }
 
-        public PagedResultDto<JobListDTO> GetJobCounts(GetAllJobsInput input)
+        public PagedResultDto<JobListDTO> GetAllPaginatedJobs(GetAllJobsInput input)
         {
             var jobrepo = _jobRepository
             .GetAll()
             .WhereIf(
                 !input.CompanyName.IsNullOrEmpty(),
                 p => p.CompanyName.Contains(input.CompanyName)
-            );
+            )
+            .WhereIf(input.ExcludeJobsId != null && input.ExcludeJobsId.Count!=0, t => !input.ExcludeJobsId.Contains(t.Id) );
+          
+            
 
-            var pagedResult = jobrepo.OrderBy(p => p.CompanyName)
+            var pagedResult = jobrepo.OrderByDescending(p => p.Id)
              .Skip(input.SkipCount)
              .Take(input.MaxResultCount)
-
              .ToList();
+            
             var totalcount = jobrepo.Count();
             var jobmapped = ObjectMapper.Map<List<JobListDTO>>(pagedResult);
             return new PagedResultDto<JobListDTO>(totalcount, jobmapped);
         }
+
+        public PagedResultDto<JobListDTO> GetNotAppliedJobs(GetAllJobsInput input)
+        {
+            var jobIds = _appliedJobsRepository
+            .GetAll()
+            .Where(t => t.CreatorUserId == AbpSession.UserId)
+            .Select(t => t.JobId)
+            .ToList();
+
+            input.ExcludeJobsId = jobIds;
+
+             return GetAllPaginatedJobs(input);
+
+        }
+
+
 
 
     }

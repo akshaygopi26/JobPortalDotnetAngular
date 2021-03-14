@@ -10,5 +10,7 @@ namespace JobPortal.Jobs.DTO
     public class GetAllJobsInput : PagedResultRequestDto
     {
         public string CompanyName { get; set; }
+
+        public List<int> ExcludeJobsId { get; set; }
     }
 }

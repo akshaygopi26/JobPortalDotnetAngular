@@ -44,8 +44,23 @@ namespace JobPortal.ApplicantJobs
 
         public void CreateApplyJob(CreateAppliedJob input)
         {
-            var job = ObjectMapper.Map<AppliedJobs>(input);
-            _appliedJobsRepository.Insert(job);
+            var m = _appliedJobsRepository.GetAll()
+               .WhereIf(AbpSession.UserId != null, t => t.CreatorUserId == AbpSession.UserId)
+               .Where(t=> t.JobId ==input.JobId)
+               .Count<AppliedJobs>();
+            
+           // var job;
+
+            if (m >= 1)
+            {
+                throw new Abp.UI.UserFriendlyException("You have already applied to this job!!");
+            }
+            else
+            {
+                var job = ObjectMapper.Map<AppliedJobs>(input);
+                _appliedJobsRepository.Insert(job);
+            }
+            
         }
 
         public async Task DeleteJob(DeleteAppliedJobDTO input)
@@ -59,15 +74,24 @@ namespace JobPortal.ApplicantJobs
             var jobAppliedQuery = _appliedJobsRepository
             .GetAll()
             .Where(t => t.CreatorUserId == input.CreatorUserId)
-            .Select(t => new AppliedJobListDTO { AppliedJobId = t.Id, CompanyName = t.JobInfo.CompanyName, Position = t.JobInfo.Position, Eligibility = t.JobInfo.Eligibility, SkillsRequired = t.JobInfo.SkillsRequired, MinimumExperienceRequired = t.JobInfo.MinimumExperienceRequired })
-            .ToList();
+            .Select(t => new AppliedJobListDTO
+            {
+                AppliedJobId = t.Id,
+                CompanyName = t.JobInfo.CompanyName,
+                Position = t.JobInfo.Position,
+                Eligibility = t.JobInfo.Eligibility,
+                SkillsRequired = t.JobInfo.SkillsRequired,
+                MinimumExperienceRequired = t.JobInfo.MinimumExperienceRequired
+            });
             
+
             
-            var pagedResult = jobAppliedQuery.OrderBy(p => p.AppliedJobId)
+            var pagedResult = jobAppliedQuery.OrderByDescending(p => p.AppliedJobId)
              .Skip(input.SkipCount)
              .Take(input.MaxResultCount)
-
              .ToList();
+
+
             var totalcount = jobAppliedQuery.Count();
             var jobmapped = ObjectMapper.Map<List<AppliedJobListDTO>>(pagedResult);
             return new PagedResultDto<AppliedJobListDTO>(totalcount, jobmapped);
