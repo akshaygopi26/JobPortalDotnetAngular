@@ -164,6 +164,15 @@
                   <td>
                     <button
                       type="button"
+                      class="btn btn-sm bg-success"
+                      (click)="applyJob(job)"
+                    >
+                      <i class="fas fa-pencil-alt"></i>
+                      {{ "Apply" | localize }}
+                    </button>
+                    &nbsp;
+                    <button
+                      type="button"
                       class="btn btn-sm bg-secondary"
                       (click)="editJob(job)"
                     >

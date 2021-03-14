@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using JobPortal.ApplicantJobs.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -51,5 +52,26 @@ namespace JobPortal.ApplicantJobs
         {
             await _appliedJobsRepository.DeleteAsync(input.Id);
         }
+
+
+        public  PagedResultDto<AppliedJobListDTO> GetAppliedJobs(GetAllAppliedJobsInput input)
+        {
+            var jobAppliedQuery = _appliedJobsRepository
+            .GetAll()
+            .Where(t => t.CreatorUserId == input.CreatorUserId)
+            .Select(t => new AppliedJobListDTO { AppliedJobId = t.Id, CompanyName = t.JobInfo.CompanyName, Position = t.JobInfo.Position, Eligibility = t.JobInfo.Eligibility, SkillsRequired = t.JobInfo.SkillsRequired, MinimumExperienceRequired = t.JobInfo.MinimumExperienceRequired })
+            .ToList();
+            
+            
+            var pagedResult = jobAppliedQuery.OrderBy(p => p.AppliedJobId)
+             .Skip(input.SkipCount)
+             .Take(input.MaxResultCount)
+
+             .ToList();
+            var totalcount = jobAppliedQuery.Count();
+            var jobmapped = ObjectMapper.Map<List<AppliedJobListDTO>>(pagedResult);
+            return new PagedResultDto<AppliedJobListDTO>(totalcount, jobmapped);
+        }
+
     }
 }

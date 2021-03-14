@@ -8,15 +8,18 @@ import {
 } from 'shared/paged-listing-component-base';
 import {
   AppliedJobListDTO,
+  AppliedJobListDTOPagedResultDto,
   AppliedJobsServiceProxy,
   UserDto,
   UserDtoPagedResultDto
 } from '@shared/service-proxies/service-proxies';
 import { CreateAppliedJobComponent } from './create-applied-job/create-applied-job.component';
 
-class PagedUsersRequestDto extends PagedRequestDto {
-  keyword: string;
+class PagedAppliedJobRequestDto extends PagedRequestDto {
+  companyName: string;
   isActive: boolean | null;
+  creatorUserId : number;
+
 }
 
 @Component({
@@ -26,7 +29,7 @@ class PagedUsersRequestDto extends PagedRequestDto {
 })
 export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobListDTO> {
   appliedjobs: AppliedJobListDTO[] = [];
-  keyword = '';
+  companyName = '';
   isActive: boolean | null;
   advancedFiltersVisible = false;
 
@@ -40,11 +43,11 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
 
 
   ngOnInit(): void {
-    this.getAllAppliedJobs(abp.session.userId);
+    this.getAllAppliedJobs(abp.session.userId,0,10);
   }
 
-  getAllAppliedJobs(creatorUserId: number){
-    this._appliedJobsService.getAll(creatorUserId)
+  getAllAppliedJobs(creatorUserId: number,skipCount: number,maxResultCount: number){
+    this._appliedJobsService.getAppliedJobs(creatorUserId,skipCount,maxResultCount)
     .pipe(
      finalize(() => {
        console.log("Error")
@@ -54,7 +57,7 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
      .subscribe( data => { 
       console.log(data)
       this.appliedjobs=data.items;
-      //this.totalItems=data.totalCount;
+      this.totalItems=data.totalCount;
     });
    }
 
@@ -71,48 +74,51 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
   // }
 
   clearFilters(): void {
-    this.keyword = '';
+    this.companyName = '';
     this.isActive = undefined;
     this.getDataPage(1);
   }
 
   protected list(
-    request: PagedUsersRequestDto,
+    request: PagedAppliedJobRequestDto,
     pageNumber: number,
     finishedCallback: Function
   ): void {
-    request.keyword = this.keyword;
+    request.companyName = this.companyName;
     request.isActive = this.isActive;
+    request.creatorUserId = abp.session.userId;
 
-    //this._appliedJobsService
-      // .getAll(
-      //   request.keyword,
-      //   request.isActive,
-      //   request.skipCount,
-      //   request.maxResultCount
-      // )
-      // .pipe(
-      //   finalize(() => {
-      //     finishedCallback();
-      //   })
-      // )
-      // .subscribe((result: UserDtoPagedResultDto) => {
-      //   this.users = result.items;
-      //   this.showPaging(result, pageNumber);
-      // });
+    
+    this._appliedJobsService
+      .getAppliedJobs(
+        request.creatorUserId,
+      //  request.isActive,
+        request.skipCount,
+        request.maxResultCount
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        })
+      )
+      .subscribe((result: AppliedJobListDTOPagedResultDto) => {
+        this.appliedjobs = result.items;
+        this.showPaging(result, pageNumber);
+       // this.totalItems=result.totalCount;
+      });
 
-      this._appliedJobsService.getAll(abp.session.userId)
-    .pipe(
-     finalize(() => {
-       console.log("Error")
-       // finishedCallback();
-     })
-    )
-     .subscribe( data => { 
-      console.log(data)
-      this.appliedjobs=data.items;
-      //this.totalItems=data.totalCount;
-    });
+    //   this._appliedJobsService.getAppliedJobs(abp.session.userId)
+    // .pipe(
+    //  finalize(() => {
+    //    console.log("Error")
+    //    finishedCallback();
+    //  })
+    // )
+    //  .subscribe( data => { 
+    //   console.log(data)
+    //   this.appliedjobs=data.items;
+    //   //this.totalItems=data.totalCount;
+    // });
   }
 
   protected delete(appliedjob: AppliedJobListDTO): void {

@@ -11,7 +11,9 @@ import {
   JobServiceProxy,
   UpdateJobInputDTO,
   JobListDTOListResultDto,
-  JobListDTOPagedResultDto
+  JobListDTOPagedResultDto,
+  AppliedJobsServiceProxy,
+  CreateAppliedJob
 } from '@shared/service-proxies/service-proxies';
 import {CreateJobComponent } from './create-job/create-job.component';
 import {EditJobComponent  } from './edit-job/edit-job.component';
@@ -31,11 +33,13 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   jobs: JobListDTO[] = [];
   companyName = '';
   isActive: boolean | null;
+  appliedjob = new CreateAppliedJob();
   advancedFiltersVisible = false;
 
   constructor(
     injector: Injector,
     private _jobService: JobServiceProxy,
+    private _appliedJobService  :AppliedJobsServiceProxy,
     private _modalService: BsModalService
   ) {
     super(injector);
@@ -67,6 +71,11 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   editJob(job: UpdateJobInputDTO): void {
     //this.showCreateOrEditJob(job.id);
     this.ShowEditJob(job);
+  }
+
+  applyJob(job: JobListDTO): void {
+    //this.showCreateOrEditJob(job.id);
+    this.ApplyForJob(job);
   }
 
   clearFilters(): void {
@@ -186,5 +195,49 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
       this.refresh();
     });
   }
+
+
+  private ApplyForJob(job: JobListDTO): void {
+
+    console.log("Job ID : "+job.id);
+    this.appliedjob.jobId=job.id;
+    // this._appliedJobService
+    //   .createApplyJob(this.appliedjob)
+    //   .pipe(
+    //     finalize(() => {
+    //      /// this.saving = false;
+    //     })
+    //   )
+    //   .subscribe(() => {
+    //     this.notify.info(this.l('SavedSuccessfully'));
+    //    // this.bsModalRef.hide();
+    //   //  this.onSave.emit();
+    //   });
+
+ 
+
+
+      abp.message.confirm(
+        this.l('Do you want to apply for this Job', job.companyName),
+        undefined,
+        (result: boolean) => {
+          if (result) {
+            this._appliedJobService.createApplyJob(this.appliedjob)
+            .pipe(
+              finalize(() => {
+               /// this.saving = false;
+              }))
+            .subscribe(() => {
+              abp.notify.success(this.l('Successfully Applied'));
+              this.refresh();
+            });
+          }
+        }
+      );
+  }
+    
 }
+
+
+
 
