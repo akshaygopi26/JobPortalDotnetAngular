@@ -26,10 +26,17 @@ namespace JobPortal.ApplicantJobs
         {
             var m = await _appliedJobsRepository.GetAll()
                .Where( t => t.CreatorUserId == input.CreatorUserId)
+               .Select(t =>new AppliedJobListDTO { AppliedJobId = t.Id, CompanyName= t.JobInfo.CompanyName, Position =t.JobInfo.Position , Eligibility=t.JobInfo.Eligibility, SkillsRequired= t.JobInfo.SkillsRequired, MinimumExperienceRequired=t.JobInfo.MinimumExperienceRequired })
                .ToListAsync();
 
+
+            //var m = await _appliedJobsRepository.GetAll()
+            //   .Where(t => t.CreatorUserId == input.CreatorUserId)
+            //   .Select(t => new AppliedJobListDTO { t.Id, t.JobInfo.CompanyName, t.JobInfo.Position, t.JobInfo.Eligibility, t.JobInfo.SkillsRequired, t.JobInfo.MinimumExperienceRequired })
+            //   .ToListAsync();
+
             var applied = ObjectMapper.Map<List<AppliedJobListDTO>>(m);
-            return new ListResultDto<AppliedJobListDTO>(applied);
+            return new ListResultDto<AppliedJobListDTO>(m);
 
         }
 

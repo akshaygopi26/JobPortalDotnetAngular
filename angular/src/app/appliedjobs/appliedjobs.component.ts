@@ -40,7 +40,7 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
 
 
   ngOnInit(): void {
-    this.getAllAppliedJobs(1);
+    this.getAllAppliedJobs(abp.session.userId);
   }
 
   getAllAppliedJobs(creatorUserId: number){
@@ -101,7 +101,7 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
       //   this.showPaging(result, pageNumber);
       // });
 
-      this._appliedJobsService.getAll(1)
+      this._appliedJobsService.getAll(abp.session.userId)
     .pipe(
      finalize(() => {
        console.log("Error")
@@ -117,11 +117,11 @@ export class AppliedjobsComponent extends PagedListingComponentBase<AppliedJobLi
 
   protected delete(appliedjob: AppliedJobListDTO): void {
     abp.message.confirm(
-      this.l('UserDeleteWarningMessage', appliedjob.creatorUserId),
+      this.l('AppliedJObDeleteWarningMessage', appliedjob.companyName),
       undefined,
       (result: boolean) => {
         if (result) {
-          this._appliedJobsService.deleteJob(appliedjob.creatorUserId).subscribe(() => {
+          this._appliedJobsService.deleteJob(appliedjob.appliedJobId).subscribe(() => {
             abp.notify.success(this.l('SuccessfullyDeleted'));
             this.refresh();
           });

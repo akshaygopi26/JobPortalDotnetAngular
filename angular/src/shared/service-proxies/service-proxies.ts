@@ -2682,8 +2682,12 @@ export interface ICreateApplicantDTO {
 }
 
 export class AppliedJobListDTO implements IAppliedJobListDTO {
-    creatorUserId: number | undefined;
-    jobId: number;
+    appliedJobId: number;
+    companyName: string | undefined;
+    position: string | undefined;
+    eligibility: string | undefined;
+    skillsRequired: string | undefined;
+    minimumExperienceRequired: string | undefined;
 
     constructor(data?: IAppliedJobListDTO) {
         if (data) {
@@ -2696,8 +2700,12 @@ export class AppliedJobListDTO implements IAppliedJobListDTO {
 
     init(_data?: any) {
         if (_data) {
-            this.creatorUserId = _data["creatorUserId"];
-            this.jobId = _data["jobId"];
+            this.appliedJobId = _data["appliedJobId"];
+            this.companyName = _data["companyName"];
+            this.position = _data["position"];
+            this.eligibility = _data["eligibility"];
+            this.skillsRequired = _data["skillsRequired"];
+            this.minimumExperienceRequired = _data["minimumExperienceRequired"];
         }
     }
 
@@ -2710,8 +2718,12 @@ export class AppliedJobListDTO implements IAppliedJobListDTO {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["creatorUserId"] = this.creatorUserId;
-        data["jobId"] = this.jobId;
+        data["appliedJobId"] = this.appliedJobId;
+        data["companyName"] = this.companyName;
+        data["position"] = this.position;
+        data["eligibility"] = this.eligibility;
+        data["skillsRequired"] = this.skillsRequired;
+        data["minimumExperienceRequired"] = this.minimumExperienceRequired;
         return data; 
     }
 
@@ -2724,8 +2736,12 @@ export class AppliedJobListDTO implements IAppliedJobListDTO {
 }
 
 export interface IAppliedJobListDTO {
-    creatorUserId: number | undefined;
-    jobId: number;
+    appliedJobId: number;
+    companyName: string | undefined;
+    position: string | undefined;
+    eligibility: string | undefined;
+    skillsRequired: string | undefined;
+    minimumExperienceRequired: string | undefined;
 }
 
 export class AppliedJobListDTOListResultDto implements IAppliedJobListDTOListResultDto {

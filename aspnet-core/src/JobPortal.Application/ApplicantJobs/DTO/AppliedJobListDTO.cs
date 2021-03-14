@@ -1,4 +1,6 @@
-﻿using Abp.AutoMapper;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using JobPortal.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +9,19 @@ using System.Threading.Tasks;
 
 namespace JobPortal.ApplicantJobs.DTO
 {
-    [AutoMapFrom(typeof(AppliedJobs))]
-    public class AppliedJobListDTO
+    //[AutoMapFrom(typeof(JobDetails))]
+    public class AppliedJobListDTO 
     {
-        public long? CreatorUserId { get; set; }
+        public int AppliedJobId { get; set; }
+        public string CompanyName { get; set; }
 
-        public int JobId { get; set; }
+        public string Position { get; set; }
+
+        public string Eligibility { get; set; }
+
+        public string SkillsRequired { get; set; }
+
+        public string MinimumExperienceRequired { get; set; }
+       
     }
 }

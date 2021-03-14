@@ -31,6 +31,6 @@ namespace JobPortal.Models.Recruiters
         public long? LastModifierUserId { get; set ; }
         public DateTime? LastModificationTime { get ; set ; }
 
-        public ICollection<JobDetails> PostedJobs { get; set; }
+       // public ICollection<JobDetails> PostedJobs { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using JobPortal.ApplicantJobs;
 using JobPortal.Authorization.Users;
 using JobPortal.Models.Recruiters;
 using System;
@@ -31,5 +32,7 @@ namespace JobPortal.Jobs
         public DateTime CreationTime { get; set ; }
         public long? LastModifierUserId { get; set; }
         public DateTime? LastModificationTime { get; set; }
+
+        public ICollection<AppliedJobs> ApplicantList { get; set; }
     }
 }

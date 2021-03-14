@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using JobPortal.ApplicantJobs;
 using JobPortal.Authorization.Users;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,8 @@ namespace JobPortal.Applicant
 
         public string HighestQualifcation { get; set; }
         public DateTime CreationTime { get ; set ; }
+
+       // public ICollection<AppliedJobs> AppliedJobs { get; set; }
+
     }
 }

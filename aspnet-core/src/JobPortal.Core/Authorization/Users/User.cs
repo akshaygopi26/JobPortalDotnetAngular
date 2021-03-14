@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 using JobPortal.Applicant;
+using JobPortal.ApplicantJobs;
+using JobPortal.Jobs;
 using JobPortal.Models.Recruiters;
 
 namespace JobPortal.Authorization.Users
@@ -14,6 +16,11 @@ namespace JobPortal.Authorization.Users
         public RecruiterDetails Recruiter { get; set; }
 
         public ApplicantDetails Applicant { get; set; }
+
+
+        public ICollection<JobDetails> PostedJobs { get; set; }
+
+        public ICollection<AppliedJobs> AppliedJobs { get; set; }
 
         public static string CreateRandomPassword()
         {

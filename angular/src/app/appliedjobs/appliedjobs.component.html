@@ -3,7 +3,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-6">
-            <h1>{{ "Users" | localize }}</h1>
+            <h1>{{ "Applied Jobs" | localize }}</h1>
           </div>
           <!-- <div class="col-6 text-right">
             <a href="javascript:;" class="btn bg-blue" (click)="createAppliedJob()">
@@ -134,8 +134,11 @@
             <table class="table table-hover text-nowrap" [busy]="isTableLoading">
               <thead class="bg-light">
                 <tr>
-                  <th>{{ "ApplicantId" | localize }}</th>
-                  <th>{{ "JobId" | localize }}</th>
+                  <th>{{ "Company Name" | localize }}</th>
+                  <th>{{ "Position" | localize }}</th>
+                  <th>{{ "Eligibility" | localize }}</th>
+                  <th>{{ "Skills Required" | localize }}</th>
+                  <th>{{ "Minimum Experience Required" | localize }}</th>
                   <th style="width: 310px;">{{ "Actions" | localize }}</th>
                 </tr>
               </thead>
@@ -152,8 +155,11 @@
                           }
                   "
                 >
-                  <td>{{ appliedjob.creatorUserId }}</td>
-                  <td>{{ appliedjob.jobId }}</td>
+                  <td>{{ appliedjob.companyName }}</td>
+                  <td>{{ appliedjob.position }}</td>
+                  <td>{{ appliedjob.eligibility }}</td>
+                  <td>{{ appliedjob.skillsRequired }}</td>
+                  <td>{{ appliedjob.minimumExperienceRequired }}</td>
                   <td>
     
                     <button
