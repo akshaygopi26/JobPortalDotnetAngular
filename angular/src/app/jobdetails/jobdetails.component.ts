@@ -13,10 +13,12 @@ import {
   JobListDTOListResultDto,
   JobListDTOPagedResultDto,
   AppliedJobsServiceProxy,
-  CreateAppliedJob
+  CreateAppliedJob,
+  
 } from '@shared/service-proxies/service-proxies';
 import {CreateJobComponent } from './create-job/create-job.component';
 import {EditJobComponent  } from './edit-job/edit-job.component';
+import { PermissionCheckerService } from 'abp-ng2-module';
 
 
 class PagedJobsRequestDto extends PagedRequestDto {
@@ -35,18 +37,23 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   isActive: boolean | null;
   appliedjob = new CreateAppliedJob();
   advancedFiltersVisible = false;
+  isApplicant = false;
+  isRecruiter = false;
 
   constructor(
     injector: Injector,
     private _jobService: JobServiceProxy,
     private _appliedJobService  :AppliedJobsServiceProxy,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _permissionChecker : PermissionCheckerService
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
     this.getAllJobs("",0,10);
+    this.isApplicant = this._permissionChecker.isGranted("Pages.Applicants");
+    this.isRecruiter = this._permissionChecker.isGranted("Pages.Recruiters")
   }
 
   getAllJobs(companyName: string,skipCount: number,maxResultCount: number){

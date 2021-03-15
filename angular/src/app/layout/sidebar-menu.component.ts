@@ -66,13 +66,13 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
         this.l('Job Details'),
         '/app/jobdetails',
         'fas fa-theater-masks',
-        'Pages.Roles'
+        'Pages.Jobs.View'
       ),
       new MenuItem(
         this.l('Applied Jobs'),
         '/app/appliedjobs',
         'fas fa-theater-masks',
-        'Pages.Roles'
+        'Pages.Applicants.AppliedJobs.View'
       ),
       new MenuItem(this.l('About'), '/app/about', 'fas fa-info-circle'),
       new MenuItem(this.l('MultiLevelMenu'), '', 'fas fa-circle', '', [

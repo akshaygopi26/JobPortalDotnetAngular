@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace JobPortal.Jobs
 {
     [Table("JobDetails")]
-    public class JobDetails : Entity,IAudited
+    public class JobDetails : Entity,IAudited,IMustHaveTenant
     {
         public long? CreatorUserId { get; set; }
         [ForeignKey("CreatorUserId")]
@@ -34,5 +34,6 @@ namespace JobPortal.Jobs
         public DateTime? LastModificationTime { get; set; }
 
         public ICollection<AppliedJobs> ApplicantList { get; set; }
+        public int TenantId { get ; set ; }
     }
 }

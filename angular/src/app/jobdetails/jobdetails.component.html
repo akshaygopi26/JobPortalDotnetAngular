@@ -5,12 +5,16 @@
           <div class="col-6">
             <h1>{{ "Job Details" | localize }}</h1>
           </div>
-          <div class="col-6 text-right">
-            <a href="javascript:;" class="btn bg-blue" (click)="createJob()">
-              <i class="fa fa-plus-square"></i>
-              {{ "Create" | localize }}
-            </a>
-          </div>
+
+          <ng-template [ngIf]="isRecruiter">
+            <div class="col-6 text-right">
+              <a href="javascript:;" class="btn bg-blue" (click)="createJob()">
+                <i class="fa fa-plus-square"></i>
+                {{ "Create" | localize }}
+              </a>
+            </div>
+          </ng-template>
+
         </div>
       </div>
     </section>
@@ -162,7 +166,8 @@
                   <td>{{ job.minimumExperienceRequired }}</td>
                  
                   <td>
-                    <button
+                    <ng-template [ngIf]="isApplicant">
+                      <button
                       type="button"
                       class="btn btn-sm bg-success"
                       (click)="applyJob(job)"
@@ -170,6 +175,8 @@
                       <i class="fas fa-pencil-alt"></i>
                       {{ "Apply" | localize }}
                     </button>
+                    </ng-template>
+                    
                     &nbsp;
                     <button
                       type="button"

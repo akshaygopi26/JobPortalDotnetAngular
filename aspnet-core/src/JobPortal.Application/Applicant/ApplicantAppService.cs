@@ -1,6 +1,8 @@
-﻿using Abp.Collections.Extensions;
+﻿using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using JobPortal.Applicant.DTO;
+using JobPortal.Authorization;
 using JobPortal.Models.Recruiters;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace JobPortal.Applicant
 {
+
+    [AbpAuthorize(PermissionNames.Pages_Applicants)]
     public class ApplicantAppService : JobPortalAppServiceBase, IApplicantAppService
     {
 

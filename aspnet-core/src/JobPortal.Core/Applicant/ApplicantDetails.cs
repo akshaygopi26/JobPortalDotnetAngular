@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal.Applicant
 {
-    public class ApplicantDetails : Entity, ICreationAudited
+    public class ApplicantDetails : Entity, ICreationAudited, IMustHaveTenant
     {
 
         [Column("ApplicantID")]
@@ -31,8 +31,9 @@ namespace JobPortal.Applicant
 
         public string HighestQualifcation { get; set; }
         public DateTime CreationTime { get ; set ; }
+        public int TenantId { get ; set ; }
 
-       // public ICollection<AppliedJobs> AppliedJobs { get; set; }
+        // public ICollection<AppliedJobs> AppliedJobs { get; set; }
 
     }
 }

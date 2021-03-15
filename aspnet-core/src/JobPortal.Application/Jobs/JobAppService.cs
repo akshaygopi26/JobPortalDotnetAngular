@@ -10,9 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Linq;
 using JobPortal.ApplicantJobs;
+using Abp.Authorization;
+using JobPortal.Authorization;
 
 namespace JobPortal.Jobs
 {
+   // [AbpAuthorize(PermissionNames.Pages_Recruiters)]
     public class JobAppService : JobPortalAppServiceBase,IJobAppService
     {
 
@@ -26,7 +29,8 @@ namespace JobPortal.Jobs
             _jobRepository = jobRepository;
             _appliedJobsRepository = appliedJobsRepository;
         }
-
+        
+   
         public async Task<ListResultDto<JobListDTO>> GetAll(GetAllJobsInput input)
         {
             var m = await _jobRepository.GetAll()
@@ -37,25 +41,34 @@ namespace JobPortal.Jobs
             return new ListResultDto<JobListDTO>(jobdto);
         }
 
-
+        [AbpAuthorize(PermissionNames.Pages_Recruiters_Jobs_Create)]
         public void CreateJob(CreateJobInput input)
         {    //var job = ObjectMapper.Map<JobDetails>(input);
-            var job1 = new JobDetails { CompanyName = input.CompanyName, Position = input.Position, Eligibility = input.Eligibility, SkillsRequired = input.SkillsRequired, MinimumExperienceRequired = input.MinimumExperienceRequired };
+            var job1 = new JobDetails { CompanyName = input.CompanyName, 
+                                        Position = input.Position,
+                                        Eligibility = input.Eligibility,
+                                        SkillsRequired = input.SkillsRequired,
+                                        MinimumExperienceRequired = input.MinimumExperienceRequired
+                                         };
             var job2 = ObjectMapper.Map<JobDetails>(input);
             _jobRepository.Insert(job2); 
         }
 
+
+        [AbpAuthorize(PermissionNames.Pages_Recruiters_Jobs_Edit)]
         public void UpdateJob(UpdateJobInputDTO input)
         {
             var job = _jobRepository.Get(input.Id);
             ObjectMapper.Map(input, job);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Recruiters_Jobs_Delete)]
         public async Task DeleteJob(DeleteJobInput input)
         {
             await _jobRepository.DeleteAsync(input.Id);
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Jobs_View)]
         public PagedResultDto<JobListDTO> GetAllPaginatedJobs(GetAllJobsInput input)
         {
             var jobrepo = _jobRepository
@@ -77,7 +90,9 @@ namespace JobPortal.Jobs
             var jobmapped = ObjectMapper.Map<List<JobListDTO>>(pagedResult);
             return new PagedResultDto<JobListDTO>(totalcount, jobmapped);
         }
+        
 
+        [AbpAuthorize(PermissionNames.Pages_Jobs_View)]
         public PagedResultDto<JobListDTO> GetNotAppliedJobs(GetAllJobsInput input)
         {
             var jobIds = _appliedJobsRepository

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal.ApplicantJobs 
 {
-   public class AppliedJobs : Entity, IAudited
+   public class AppliedJobs : Entity, IAudited, IMustHaveTenant
     {
         public long? CreatorUserId { get; set; }
         [ForeignKey("CreatorUserId")]
@@ -23,5 +23,6 @@ namespace JobPortal.ApplicantJobs
         public int JobId { get; set; }
         [ForeignKey("JobId")]
         public JobDetails JobInfo { get; set; }
+        public int TenantId { get; set ; }
     }
 }

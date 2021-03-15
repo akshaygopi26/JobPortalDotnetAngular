@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using JobPortal.ApplicantJobs.DTO;
+using JobPortal.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace JobPortal.ApplicantJobs
 {
+
+    [AbpAuthorize(PermissionNames.Pages_Applicants)]
     public class AppliedJobsAppService : JobPortalAppServiceBase, IAppliedJobsAppService
     {
 
@@ -42,6 +46,7 @@ namespace JobPortal.ApplicantJobs
         }
 
 
+        [AbpAuthorize(PermissionNames.Pages_Applicants_Jobs_Apply)]
         public void CreateApplyJob(CreateAppliedJob input)
         {
             var m = _appliedJobsRepository.GetAll()
@@ -63,12 +68,14 @@ namespace JobPortal.ApplicantJobs
             
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Applicants_AppliedJobs_Delete)]
         public async Task DeleteJob(DeleteAppliedJobDTO input)
         {
             await _appliedJobsRepository.DeleteAsync(input.Id);
         }
 
 
+        [AbpAuthorize(PermissionNames.Pages_Applicants_AppliedJobs_View)]
         public  PagedResultDto<AppliedJobListDTO> GetAppliedJobs(GetAllAppliedJobsInput input)
         {
             var jobAppliedQuery = _appliedJobsRepository

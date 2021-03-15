@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JobPortal.Models.Recruiters
 {
-    public class RecruiterDetails : Entity,IAudited
+    public class RecruiterDetails : Entity,IAudited,IMustHaveTenant
     {
         [Column("RecruiterID")]
         public long? CreatorUserId { get; set; }
@@ -30,7 +30,8 @@ namespace JobPortal.Models.Recruiters
         public DateTime CreationTime { get; set; }
         public long? LastModifierUserId { get; set ; }
         public DateTime? LastModificationTime { get ; set ; }
+        public int TenantId { get ; set; }
 
-       // public ICollection<JobDetails> PostedJobs { get; set; }
+        // public ICollection<JobDetails> PostedJobs { get; set; }
     }
 }
