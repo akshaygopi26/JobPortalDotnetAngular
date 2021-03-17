@@ -3,13 +3,59 @@
     <head>
     <style>
     h1 {text-align: center;}
-   
+ 
+    .container {
+            height: 300px;
+            position: relative;
+            border: 3px solid green;
+                }
+
+    .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            }
     </style>
     </head>
     <body>
     
     <h1>Job Portal</h1>
-   
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <ng-template [ngIf]="hasNoRole">
+    <div class="container">
+      <div class="centre"> 
+          <h3>Complete the Registration</h3>
+          <p>Click here if you are Recruiter<p>
+            <button
+            type="button"
+            class="btn btn-sm bg-success"
+            (click)="Recruiter()"
+            >
+            <i class="fas fa-pencil-alt"></i>
+            {{ "Recruiter" | localize }}
+            </button>          
+            <br>
+            <p>Click here if you are Applicant<p>
+             <button
+            type="button"
+            class="btn btn-sm bg-success"
+              (click)="Applicant()"
+            >
+            <i class="fas fa-pencil-alt"></i>
+            {{ "Applicant" | localize }}
+          </button>  
     
+     </div>
+  </div>
+</ng-template>
+
     </body>
     </html>

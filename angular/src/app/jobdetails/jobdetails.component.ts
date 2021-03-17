@@ -39,6 +39,7 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   advancedFiltersVisible = false;
   isApplicant = false;
   isRecruiter = false;
+  hasNoRole = false;
 
   constructor(
     injector: Injector,
@@ -53,7 +54,8 @@ export class JobdetailsComponent extends PagedListingComponentBase<JobListDTO> {
   ngOnInit(): void {
     this.getAllJobs("",0,10);
     this.isApplicant = this._permissionChecker.isGranted("Pages.Applicants");
-    this.isRecruiter = this._permissionChecker.isGranted("Pages.Recruiters")
+    this.isRecruiter = this._permissionChecker.isGranted("Pages.Recruiters");
+    this.hasNoRole = !this.isApplicant && !this.isRecruiter;
   }
 
   getAllJobs(companyName: string,skipCount: number,maxResultCount: number){

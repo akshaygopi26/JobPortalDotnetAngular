@@ -28,7 +28,7 @@ import { AppliedjobsComponent } from './appliedjobs/appliedjobs.component';
                     { path: 'about', component: AboutComponent },
                     { path: 'update-password', component: ChangePasswordComponent } 
                 ]
-            }
+        }
         ])
     ],
     exports: [RouterModule]
