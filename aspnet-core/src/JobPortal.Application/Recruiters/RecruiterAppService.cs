@@ -53,26 +53,23 @@ namespace JobPortal.Recruiters
             }
         }
 
-        public async void SetRoleRecruiter()
+        public async Task SetRoleRecruiter(String input)
         {
             string[] roles = { "RECRUITER" };
 
-            //CheckUpdatePermission();
-            var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
-            var _userId =user.Id;
-            var _tenantId = AbpSession.TenantId;
-            //user.IsEmailConfirmed = true;
-            // await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
-           // var userName = "Akshay";
+            var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
+            var _userId = user.Id;
+            var _tenantId = AbpSession.TenantId;
 
             var role = await _roleManager.FindByNameAsync("RECRUITER");
-            //await _userManager.SetRolesAsync(user, roles);
 
-            _userRolesRepository.Insert(new UserRole(_tenantId, _userId,role.Id));
-            //CurrentUnitOfWork.SaveChanges();
-            // CheckErrors(await _userManager.UpdateAsync(user));
 
+            _userRolesRepository.Insert(new UserRole(_tenantId, _userId, role.Id));
         }
+
+        
+
+
     }
 }

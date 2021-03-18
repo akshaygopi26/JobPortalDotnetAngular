@@ -66,17 +66,12 @@ namespace JobPortal.Applicant
             var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
             var _userId = user.Id;
             var _tenantId = AbpSession.TenantId;
-            //user.IsEmailConfirmed = true;
-            // await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
-
-            // var userName = "Akshay";
 
             var role = await _roleManager.FindByNameAsync("APPLICANT");
-            //await _userManager.SetRolesAsync(user, roles);
+
 
             _userRolesRepository.Insert(new UserRole(_tenantId, _userId, role.Id));
-            //CurrentUnitOfWork.SaveChanges();
-            // CheckErrors(await _userManager.UpdateAsync(user));
+
 
         }
     }

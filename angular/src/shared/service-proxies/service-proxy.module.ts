@@ -16,6 +16,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.JobServiceProxy,
         ApiServiceProxies.AppliedJobsServiceProxy,
         ApiServiceProxies.RecruiterServiceProxy,
+        ApiServiceProxies.ApplicantServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

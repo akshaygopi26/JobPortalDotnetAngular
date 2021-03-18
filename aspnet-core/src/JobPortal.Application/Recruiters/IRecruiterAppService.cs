@@ -10,5 +10,7 @@ namespace JobPortal.Recruiters
     public interface IRecruiterAppService
     {
         void CreateRecruiter(CreateRecruiterDTO input);
+
+         Task SetRoleRecruiter(String input);
     }
 }
