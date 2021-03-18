@@ -204,10 +204,13 @@ export class ApplicantServiceProxy {
     }
 
     /**
+     * @param input (optional) 
      * @return Success
      */
-    setRoleApplicant(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Applicant/SetRoleApplicant";
+    setRoleApplicant(input: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Applicant/SetRoleApplicant?";
+        if (input !== undefined)
+            url_ += "input=" + encodeURIComponent("" + input) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

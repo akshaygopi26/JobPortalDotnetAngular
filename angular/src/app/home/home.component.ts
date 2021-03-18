@@ -78,7 +78,21 @@ export class HomeComponent extends   AppComponentBase {
   }
 
   Applicant(): void {
-    this._applicantService.setRoleApplicant();
+   
+    console.log("In Reecruiter Fucntion")
+    this._applicantService.setRoleApplicant("APPLICANT")
+    .pipe(
+      finalize(() => {
+        console.log("Error")
+        // finishedCallback();
+      })
+     )
+      .subscribe( data => { 
+       console.log(data)
+      // this.jobs=data.items;
+       //this.totalItems=data.totalCount;
+     });
+    console.log("Setting Role for Recruiter Executed");
   }
 
 

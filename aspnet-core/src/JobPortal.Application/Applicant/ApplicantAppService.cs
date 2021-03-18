@@ -59,7 +59,7 @@ namespace JobPortal.Applicant
 
 
 
-        public async void SetRoleApplicant()
+        public async void SetRoleApplicant(String input)
         {
             string[] roles = { "APPLICANT" };
 
