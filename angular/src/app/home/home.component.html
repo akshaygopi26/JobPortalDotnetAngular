@@ -56,6 +56,26 @@
      </div>
   </div>
 </ng-template>
+<ng-template [ngIf]="onlyRecruiter">
+  <div class="container">
+    <div class="centre"> 
+        <h2>Welcome to Job Portal</h2>
+        <h3>You are Logged In as Recruiter</h3>
+        <h5>Here you can Create,Delete and Edit Jobs</h5>
+   </div>
+</div>
+</ng-template>
+
+<ng-template [ngIf]="onlyApplicant">
+  <div class="container">
+    <div class="centre"> 
+        <h2>Welcome to Job Portal</h2>
+        <h3>You are Logged In as Applicant</h3>
+        <h5>Here you can view the Job Details which are posted by the Recruiters and you can apply for the job you like</h5>
+   </div>
+</div>
+</ng-template>
+
 
     </body>
     </html>

@@ -61,13 +61,11 @@ namespace JobPortal.Applicant
 
         public async void SetRoleApplicant(String input)
         {
-            string[] roles = { "APPLICANT" };
-
-            var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
-            var _userId = user.Id;
+           
+            var _userId = (int)AbpSession.UserId;
             var _tenantId = AbpSession.TenantId;
 
-            var role = await _roleManager.FindByNameAsync("APPLICANT");
+            var role = await _roleManager.FindByNameAsync(input);
 
 
             _userRolesRepository.Insert(new UserRole(_tenantId, _userId, role.Id));

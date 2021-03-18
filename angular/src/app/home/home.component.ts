@@ -38,6 +38,9 @@ export class HomeComponent extends   AppComponentBase {
   isApplicant = false;
   isRecruiter = false;
   hasNoRole = false;
+  isUser = false;
+  onlyApplicant =false;
+  onlyRecruiter = false;
 
   constructor(
     injector: Injector,
@@ -55,12 +58,15 @@ export class HomeComponent extends   AppComponentBase {
     this.isApplicant = this._permissionChecker.isGranted("Pages.Applicants");
     this.isRecruiter = this._permissionChecker.isGranted("Pages.Recruiters");
     this.hasNoRole = !this.isApplicant && !this.isRecruiter;
+    this.isUser = this._permissionChecker.isGranted("Pages.Users");
+    this.onlyApplicant = !this.isUser && this.isApplicant;
+    this.onlyRecruiter = !this.isUser && this.isRecruiter;
   }
 
   Recruiter(): void {
 
     console.log("In Reecruiter Fucntion")
-    this._recruiterService.setRoleRecruiter("RECRUITER")
+    this._recruiterService.setRole("RECRUITER")
     .pipe(
       finalize(() => {
         console.log("Error")
@@ -79,8 +85,9 @@ export class HomeComponent extends   AppComponentBase {
 
   Applicant(): void {
    
-    console.log("In Reecruiter Fucntion")
-    this._applicantService.setRoleApplicant("APPLICANT")
+    console.log("In Applicant Fucntion")
+    //this._applicantService.setRoleApplicant("APPLICANT")
+    this._recruiterService.setRole("APPLICANT")
     .pipe(
       finalize(() => {
         console.log("Error")
@@ -92,7 +99,7 @@ export class HomeComponent extends   AppComponentBase {
       // this.jobs=data.items;
        //this.totalItems=data.totalCount;
      });
-    console.log("Setting Role for Recruiter Executed");
+    console.log("Setting Role for Applicant Executed");
   }
 
 

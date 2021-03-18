@@ -11,6 +11,6 @@ namespace JobPortal.Recruiters
     {
         void CreateRecruiter(CreateRecruiterDTO input);
 
-         Task SetRoleRecruiter(String input);
+         Task SetRole(String input);
     }
 }
