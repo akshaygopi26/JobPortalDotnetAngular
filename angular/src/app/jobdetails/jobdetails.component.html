@@ -178,6 +178,7 @@
                     </ng-template>
                     
                     &nbsp;
+                    <ng-template [ngIf]="isRecruiter">
                     <button
                       type="button"
                       class="btn btn-sm bg-secondary"
@@ -186,6 +187,8 @@
                       <i class="fas fa-pencil-alt"></i>
                       {{ "Edit" | localize }}
                     </button>
+                  </ng-template>
+                  <ng-template [ngIf]="isRecruiter">
                     <button
                       type="button"
                       class="btn btn-sm bg-danger mx-2"
@@ -194,7 +197,7 @@
                       <i class="fas fa-trash"></i>
                       {{ "Delete" | localize }}
                     </button>
-                    
+                  </ng-template>
                   </td>
                 </tr>
               </tbody>

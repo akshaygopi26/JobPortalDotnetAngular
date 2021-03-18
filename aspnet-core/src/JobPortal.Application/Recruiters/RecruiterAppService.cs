@@ -1,8 +1,12 @@
-﻿using Abp.Collections.Extensions;
+﻿using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using JobPortal.Applicant;
+using JobPortal.Authorization.Roles;
+using JobPortal.Authorization.Users;
 using JobPortal.Models.Recruiters;
 using JobPortal.Recruiters.DTO;
+using JobPortal.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +22,19 @@ namespace JobPortal.Recruiters
 
         private readonly IRepository<ApplicantDetails> _applicantRepository;
 
-        public RecruiterAppService(IRepository<RecruiterDetails> recruiterRepository, IRepository<ApplicantDetails> applicantRepository)
+        private readonly IRepository<UserRole,long> _userRolesRepository;
+
+        private readonly UserManager _userManager;
+
+        private readonly RoleManager _roleManager;
+
+        public RecruiterAppService(IRepository<RecruiterDetails> recruiterRepository, IRepository<ApplicantDetails> applicantRepository, UserManager userManager, IRepository<UserRole, long> userRolesRepository, RoleManager roleManager)
         {
             _recruiterRepository = recruiterRepository;
             _applicantRepository = applicantRepository;
+            _userManager = userManager;
+            _userRolesRepository = userRolesRepository;
+            _roleManager = roleManager;
         }
 
         public  void CreateRecruiter(CreateRecruiterDTO input)
@@ -38,6 +51,28 @@ namespace JobPortal.Recruiters
                 var recruiter = ObjectMapper.Map<RecruiterDetails>(input);
                 _recruiterRepository.Insert(recruiter);
             }
+        }
+
+        public async void SetRoleRecruiter()
+        {
+            string[] roles = { "RECRUITER" };
+
+            //CheckUpdatePermission();
+            var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
+            var _userId =user.Id;
+            var _tenantId = AbpSession.TenantId;
+            //user.IsEmailConfirmed = true;
+            // await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
+
+           // var userName = "Akshay";
+
+            var role = await _roleManager.FindByNameAsync("RECRUITER");
+            //await _userManager.SetRolesAsync(user, roles);
+
+            _userRolesRepository.Insert(new UserRole(_tenantId, _userId,role.Id));
+            //CurrentUnitOfWork.SaveChanges();
+            // CheckErrors(await _userManager.UpdateAsync(user));
+
         }
     }
 }

@@ -14,7 +14,9 @@ import {
   JobListDTOListResultDto,
   JobListDTOPagedResultDto,
   AppliedJobsServiceProxy,
-  CreateAppliedJob,
+  RecruiterServiceProxy,
+  RoleDto,
+  UserDto
   
 } from '@shared/service-proxies/service-proxies';
 import { PermissionCheckerService } from 'abp-ng2-module';
@@ -30,7 +32,7 @@ class PagedJobsRequestDto extends PagedRequestDto {
   animations: [appModuleAnimation()],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent extends AppComponentBase {
+export class HomeComponent extends   AppComponentBase {
 
   isApplicant = false;
   isRecruiter = false;
@@ -38,7 +40,7 @@ export class HomeComponent extends AppComponentBase {
 
   constructor(
     injector: Injector,
-    private _jobService: JobServiceProxy,
+    private _recruiterService: RecruiterServiceProxy,
     private _appliedJobService  :AppliedJobsServiceProxy,
     private _modalService: BsModalService,
     private _permissionChecker : PermissionCheckerService
@@ -52,7 +54,9 @@ export class HomeComponent extends AppComponentBase {
     this.hasNoRole = !this.isApplicant && !this.isRecruiter;
   }
 
-  Recruiter(job: JobListDTO): void {
+  Recruiter(): void {
+    //this._recruiterService.setRoleRecruiter();
+    
     
   }
 

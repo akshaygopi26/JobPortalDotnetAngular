@@ -1,8 +1,11 @@
 ﻿using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using JobPortal.Applicant.DTO;
 using JobPortal.Authorization;
+using JobPortal.Authorization.Roles;
+using JobPortal.Authorization.Users;
 using JobPortal.Models.Recruiters;
 using System;
 using System.Collections.Generic;
@@ -13,18 +16,28 @@ using System.Threading.Tasks;
 namespace JobPortal.Applicant
 {
 
-    [AbpAuthorize(PermissionNames.Pages_Applicants)]
+    //[AbpAuthorize(PermissionNames.Pages_Applicants)]
     public class ApplicantAppService : JobPortalAppServiceBase, IApplicantAppService
     {
 
         private readonly IRepository<RecruiterDetails> _recruiterRepository;
 
         private readonly IRepository<ApplicantDetails> _applicantRepository;
+        
+        private readonly UserManager _userManager;
 
-        public ApplicantAppService(IRepository<RecruiterDetails> recruiterRepository, IRepository<ApplicantDetails> applicantRepository = null)
+
+        private readonly RoleManager _roleManager;
+
+        private readonly IRepository<UserRole, long> _userRolesRepository;
+
+        public ApplicantAppService(IRepository<RecruiterDetails> recruiterRepository, IRepository<ApplicantDetails> applicantRepository = null, UserManager userManager = null, RoleManager roleManager = null, IRepository<UserRole, long> userRolesRepository = null)
         {
             _recruiterRepository = recruiterRepository;
             _applicantRepository = applicantRepository;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _userRolesRepository = userRolesRepository;
         }
 
 
@@ -42,6 +55,29 @@ namespace JobPortal.Applicant
                 var applicant = ObjectMapper.Map<ApplicantDetails>(input);
                 _applicantRepository.Insert(applicant);
             }
+        }
+
+
+
+        public async void SetRoleApplicant()
+        {
+            string[] roles = { "APPLICANT" };
+
+            var user = await _userManager.GetUserByIdAsync((int)AbpSession.UserId);
+            var _userId = user.Id;
+            var _tenantId = AbpSession.TenantId;
+            //user.IsEmailConfirmed = true;
+            // await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
+
+            // var userName = "Akshay";
+
+            var role = await _roleManager.FindByNameAsync("APPLICANT");
+            //await _userManager.SetRolesAsync(user, roles);
+
+            _userRolesRepository.Insert(new UserRole(_tenantId, _userId, role.Id));
+            //CurrentUnitOfWork.SaveChanges();
+            // CheckErrors(await _userManager.UpdateAsync(user));
+
         }
     }
 }
