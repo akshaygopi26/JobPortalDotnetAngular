@@ -79,8 +79,11 @@ export class HomeComponent extends   AppComponentBase {
        //this.totalItems=data.totalCount;
      });
     console.log("Setting Role for Recruiter Executed");
-  
-
+    location.reload();
+    // this.isRecruiter=true;
+    // this.ngOnInit();
+    // console.log(this.isRecruiter);
+   
   }
 
   Applicant(): void {
@@ -91,7 +94,7 @@ export class HomeComponent extends   AppComponentBase {
     .pipe(
       finalize(() => {
         console.log("Error")
-        // finishedCallback();
+        //finishedCallback();
       })
      )
       .subscribe( data => { 
@@ -100,10 +103,9 @@ export class HomeComponent extends   AppComponentBase {
        //this.totalItems=data.totalCount;
      });
     console.log("Setting Role for Applicant Executed");
+    location.reload();
+    
   }
-
-
-
 
 
     
