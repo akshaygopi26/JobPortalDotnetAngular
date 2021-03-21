@@ -79,7 +79,7 @@ export class HomeComponent extends   AppComponentBase {
        //this.totalItems=data.totalCount;
        location.reload();
      });
-    console.log("Setting Role for Recruiter Executed");
+    console.log("Setting Role for Recruiterr Executed");
   
     // this.isRecruiter=true;
     // this.ngOnInit();
